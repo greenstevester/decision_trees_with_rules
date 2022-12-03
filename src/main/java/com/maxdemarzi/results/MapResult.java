@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class MapResult {
+
     private static final MapResult EMPTY = new MapResult(Collections.emptyMap());
     public final Map<String, Object> value;
 

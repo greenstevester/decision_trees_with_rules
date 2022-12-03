@@ -2,15 +2,15 @@ package com.maxdemarzi;
 
 import com.maxdemarzi.schema.Labels;
 import com.maxdemarzi.schema.RelationshipTypes;
+import java.util.Collections;
+import java.util.Map;
 import org.codehaus.janino.ScriptEvaluator;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.traversal.BranchState;
 import org.neo4j.logging.Log;
 
-import java.util.Collections;
-import java.util.Map;
-
 public class DecisionTreeExpanderTwo implements PathExpander {
+
     private Map<String, String> facts;
     private Log log;
     ScriptEvaluator se = new ScriptEvaluator();
@@ -37,7 +37,6 @@ public class DecisionTreeExpanderTwo implements PathExpander {
             try {
                 return path.endNode().getRelationships(Direction.OUTGOING, choosePath(path.endNode()));
             } catch (Exception e) {
-
                 log.debug("Decision Tree Traversal failed", e);
                 // Could not continue this way!
                 return Collections.emptyList();
@@ -64,7 +63,7 @@ public class DecisionTreeExpanderTwo implements PathExpander {
         se.setParameters(parameterNames, parameterTypes);
 
         // And now we "cook" (scan, parse, compile and load) the script.
-        se.cook((String)ruleProperties.get("script"));
+        se.cook((String) ruleProperties.get("script"));
 
         return RelationshipType.withName((String) se.evaluate(arguments));
     }

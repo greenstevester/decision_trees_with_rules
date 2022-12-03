@@ -7,6 +7,7 @@ import org.neo4j.graphdb.traversal.Evaluation;
 import org.neo4j.graphdb.traversal.PathEvaluator;
 
 public class DecisionTreeEvaluator implements PathEvaluator {
+
     @Override
     public Evaluation evaluate(Path path, BranchState branchState) {
         // If we get to an Answer stop traversing, we found a valid path.

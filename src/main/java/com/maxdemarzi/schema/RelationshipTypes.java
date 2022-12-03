@@ -6,5 +6,5 @@ public enum RelationshipTypes implements RelationshipType {
     HAS,
     NEXT,
     IS_TRUE,
-    IS_FALSE
+    IS_FALSE,
 }
