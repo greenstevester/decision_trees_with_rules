@@ -10,7 +10,6 @@ import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.exceptions.KernelException;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.api.procedure.GlobalProcedures;
@@ -18,11 +17,10 @@ import org.neo4j.kernel.internal.GraphDatabaseAPI;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 
@@ -47,22 +45,22 @@ public class EmbeddedNeo4jTest {
         "CREATE (tree:Tree { id: 'bar entrance' })" +
                 "CREATE (over21_rule:Rule { parameter_names: 'age', parameter_types: 'int',  expression: 'age >= 21' })" +
                 "CREATE (gender_rule:Rule { parameter_names: 'age,gender', parameter_types: 'int,String', expression:'(age >= 18) && gender.equals(\"female\")' })" +
-                //"CREATE (dress_code_rule:Rule { parameter_names: 'dress_code', parameter_types: 'String', expression:'dress_code.equals(\"black\")' })" +
+//                "CREATE (dress_code_rule:Rule { parameter_names: 'dress_code', parameter_types: 'String', expression:'dress_code.equals(\"black\")' })" +
                 "CREATE (answer_yes:Answer { id: 'yes'})" +
                 "CREATE (answer_no:Answer { id: 'no'})" +
                 "CREATE (tree)-[:HAS]->(over21_rule)" +
                 "CREATE (over21_rule)-[:IS_TRUE]->(answer_yes)" +
                 "CREATE (over21_rule)-[:IS_FALSE]->(gender_rule)" +
                 "CREATE (gender_rule)-[:IS_TRUE]->(answer_yes)" +
-                "CREATE (gender_rule)-[:IS_FALSE]->(answer_no)";
-              //  "CREATE (dress_code_rule)-[:IS_TRUE]->(answer_yes)" +
-              //  "CREATE (dress_code_rule)-[:IS_FALSE]->(answer_no)";
+                "CREATE (gender_rule)-[:IS_FALSE]->(answer_no)" ;
+//                "CREATE (dress_code_rule)-[:IS_TRUE]->(answer_yes)" +
+//                "CREATE (dress_code_rule)-[:IS_FALSE]->(answer_no)";
 
     private static final String QUERY1 =
                 "CALL com.maxdemarzi.traverse.decision_tree('bar entrance', {gender:'male', age:'20'}) yield path return path";
 
     private static final String QUERY2 =
-                "CALL com.maxdemarzi.traverse.decision_tree('bar entrance', {gender:'female', age:'19'}) yield path return path";
+                "CALL com.maxdemarzi.traverse.decision_tree('bar entrance', {gender:'female', age:'18'}) yield path return path";
 
     private static final String QUERY3 =
             "CALL com.maxdemarzi.traverse.decision_tree('bar entrance', {gender:'female', age:'17'}) yield path return path";

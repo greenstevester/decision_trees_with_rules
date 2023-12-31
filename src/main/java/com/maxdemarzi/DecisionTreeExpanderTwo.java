@@ -2,14 +2,14 @@ package com.maxdemarzi;
 
 import com.maxdemarzi.schema.Labels;
 import com.maxdemarzi.schema.RelationshipTypes;
-import java.util.Collections;
-import java.util.Map;
 import org.codehaus.janino.ScriptEvaluator;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.traversal.BranchState;
 import org.neo4j.logging.Log;
 
-public class DecisionTreeExpanderTwo implements PathExpander {
+import java.util.Map;
+
+public class DecisionTreeExpanderTwo implements PathExpander<String> {
 
     private Map<String, String> facts;
     private Log log;
@@ -22,10 +22,10 @@ public class DecisionTreeExpanderTwo implements PathExpander {
     }
 
     @Override
-    public Iterable<Relationship> expand(Path path, BranchState branchState) {
+    public ResourceIterable<Relationship> expand(Path path, BranchState<String> branchState ) {
         // If we get to an Answer stop traversing, we found a valid path.
         if (path.endNode().hasLabel(Labels.Answer)) {
-            return Collections.emptyList();
+            return org.neo4j.internal.helpers.collection.Iterables.emptyResourceIterable();
         }
 
         // If we have Rules to evaluate, go do that.
@@ -39,12 +39,12 @@ public class DecisionTreeExpanderTwo implements PathExpander {
             } catch (Exception e) {
                 log.debug("Decision Tree Traversal failed", e);
                 // Could not continue this way!
-                return Collections.emptyList();
+                return org.neo4j.internal.helpers.collection.Iterables.emptyResourceIterable();
             }
         }
 
         // Otherwise, not sure what to do really.
-        return Collections.emptyList();
+        return org.neo4j.internal.helpers.collection.Iterables.emptyResourceIterable();
     }
 
     private RelationshipType choosePath(Node rule) throws Exception {

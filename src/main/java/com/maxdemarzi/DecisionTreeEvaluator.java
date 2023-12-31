@@ -6,7 +6,7 @@ import org.neo4j.graphdb.traversal.BranchState;
 import org.neo4j.graphdb.traversal.Evaluation;
 import org.neo4j.graphdb.traversal.PathEvaluator;
 
-public class DecisionTreeEvaluator implements PathEvaluator {
+public class DecisionTreeEvaluator implements PathEvaluator<String> {
 
     @Override
     public Evaluation evaluate(Path path, BranchState branchState) {

@@ -9,11 +9,10 @@ import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.traversal.BranchState;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.Map;
 
 // see https://janino-compiler.github.io/janino/
-public class DecisionTreeExpander implements PathExpander {
+public class DecisionTreeExpander implements PathExpander<String> {
 
     private static final Logger log = LogManager.getLogger(DecisionTreeExpander.class);
 
@@ -23,12 +22,13 @@ public class DecisionTreeExpander implements PathExpander {
         this.facts = facts;
     }
 
+
     @Override
-    public Iterable<Relationship> expand(Path path, BranchState branchState) {
+    public ResourceIterable<Relationship> expand(Path path, BranchState<String> branchState ) {
 
         // If we get to an Answer stop traversing, we found a valid path.
         if (path.endNode().hasLabel(Labels.Answer)) {
-            return Collections.emptyList();
+            return org.neo4j.internal.helpers.collection.Iterables.emptyResourceIterable();
         }
 
         // If we have Rules to evaluate, go do that.
@@ -49,12 +49,12 @@ public class DecisionTreeExpander implements PathExpander {
                 }
             } catch (Exception e) {
                 // Could not continue this way!
-                return Collections.emptyList();
+                return org.neo4j.internal.helpers.collection.Iterables.emptyResourceIterable();
             }
         }
 
         // Otherwise, not sure what to do really.
-        return Collections.emptyList();
+        return org.neo4j.internal.helpers.collection.Iterables.emptyResourceIterable();
     }
 
 
@@ -100,7 +100,7 @@ public class DecisionTreeExpander implements PathExpander {
     }
 
     @Override
-    public PathExpander reverse() {
+    public PathExpander<String> reverse() {
         return null;
     }
 }
